@@ -20,7 +20,17 @@ class HelpApp extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("감사노트 [오늘감사]"),
+        title: Transform(
+          // you can forcefully translate values left side using Transform
+          transform: Matrix4.translationValues(0.0, 5.0, 0.0),
+          child: Text(
+            "감사노트 ＜오늘감사＞",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

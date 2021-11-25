@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: '오늘감사',
+      title: '감사노트 ＜오늘감사＞',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -93,7 +93,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.lightGreen,
       ),
-      home: const MyHomePage(title: '오늘감사'),
+      home: const MyHomePage(title: '감사노트 ＜오늘감사＞'),
     );
   }
 }
@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           Expanded(
-            child: SingleChildScrollView(child: makeListView2('')),
+            child: SingleChildScrollView(child: ThacksList('')),
           ),
         ],
       ),
@@ -291,7 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //readDB();
   }
 
-  Widget makeListView2(dt) {
+  Widget ThacksList(dt) {
     return FutureBuilder(builder: (context, snapshot) {
       //if (snapshot.hasData) {
 
@@ -323,6 +323,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Padding(
               padding: const EdgeInsets.all(10),
               child: ListTile(
+                  onTap: () {
+                    sel_no = 0;
+                    viewArticle(context, sel_no);
+                  },
                   title: Text("오늘 첫번째 감사를 기록해 보세요.",
                       style: TextStyle(
                           color: Colors.green[400],
@@ -424,160 +428,4 @@ Future<void> deleteArticle(context) async {
     context,
     MaterialPageRoute(builder: (context) => MyApp()),
   );
-}
-
-class CalendarRoute extends StatelessWidget {
-  const CalendarRoute({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("감사 달력"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Calendar(
-                weekendOpacityEnable: true,
-                previous: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(500),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey[300]!,
-                            spreadRadius: 1.5,
-                            blurRadius: 5,
-                            offset: Offset(2.0, 0.0))
-                      ]),
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-                next: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(500),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey[300]!,
-                            spreadRadius: 1.5,
-                            blurRadius: 5,
-                            offset: Offset(2.0, 0.0))
-                      ]),
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-                space: 20,
-                onSelected: print,
-                backgroundColor: Colors.white,
-                activeColor: Colors.orange,
-                textStyleDays: TextStyle(
-                    fontWeight: FontWeight.normal, color: Colors.black),
-                textStyleWeekDay:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                titleStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                selectedStyle:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            )
-          ],
-        ),
-      ),
-// This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-class CalendarRoute2 extends StatelessWidget {
-  const CalendarRoute2({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("감사 달력"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Calendar(
-                weekendOpacityEnable: true,
-                previous: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(500),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey[300]!,
-                            spreadRadius: 1.5,
-                            blurRadius: 5,
-                            offset: Offset(2.0, 0.0))
-                      ]),
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-                next: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(500),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey[300]!,
-                            spreadRadius: 1.5,
-                            blurRadius: 5,
-                            offset: Offset(2.0, 0.0))
-                      ]),
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-                space: 20,
-                onSelected: print,
-                backgroundColor: Colors.white,
-                activeColor: Colors.orange,
-                textStyleDays: TextStyle(
-                    fontWeight: FontWeight.normal, color: Colors.black),
-                textStyleWeekDay:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                titleStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                selectedStyle:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            )
-          ],
-        ),
-      ),
-// This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
 }
