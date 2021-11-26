@@ -72,6 +72,8 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
       _rangeSelectionMode = RangeSelectionMode.toggledOn;
     });
 
+    print(start);
+    print(end);
     // `start` or `end` could be null
     if (start != null && end != null) {
       _selectedEvents.value = _getEventsForRange(start, end);
