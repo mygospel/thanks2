@@ -19,6 +19,7 @@ import './database/db.dart';
 import './splash.dart';
 import './edit.dart';
 import './help.dart';
+import './calendar.dart';
 
 TextEditingController titleController = new TextEditingController();
 TextEditingController dateController = new TextEditingController();
@@ -164,7 +165,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       context,
                       MaterialPageRoute(builder: (context) => HelpApp()),
                     )
-                  })
+                  }),
+          new IconButton(
+              icon: new Icon(Icons.calendar_view_month, color: Colors.white70),
+              tooltip: '앱소개',
+              onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ThanksCanledar()),
+                    )
+                  }),
         ],
       ),
       body: Column(

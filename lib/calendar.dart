@@ -1,164 +1,162 @@
 import 'dart:async';
-import 'package:calendar_calendar/calendar_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
-
+import 'package:table_calendar/table_calendar.dart';
 import './main.dart';
 import './edit.dart';
 import './help.dart';
+import 'calendar_util.dart';
 
-class CalendarRoute extends StatelessWidget {
-  const CalendarRoute({Key? key}) : super(key: key);
-
+class ThanksCanledar extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("감사 달력"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Calendar(
-                weekendOpacityEnable: true,
-                previous: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(500),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey[300]!,
-                            spreadRadius: 1.5,
-                            blurRadius: 5,
-                            offset: Offset(2.0, 0.0))
-                      ]),
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-                next: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(500),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey[300]!,
-                            spreadRadius: 1.5,
-                            blurRadius: 5,
-                            offset: Offset(2.0, 0.0))
-                      ]),
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-                space: 20,
-                onSelected: print,
-                backgroundColor: Colors.white,
-                activeColor: Colors.orange,
-                textStyleDays: TextStyle(
-                    fontWeight: FontWeight.normal, color: Colors.black),
-                textStyleWeekDay:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                titleStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                selectedStyle:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            )
-          ],
-        ),
-      ),
-// This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+  _ThanksCanledarState createState() => _ThanksCanledarState();
 }
 
-class CalendarRoute2 extends StatelessWidget {
-  const CalendarRoute2({Key? key}) : super(key: key);
+class _ThanksCanledarState extends State<ThanksCanledar> {
+  late final ValueNotifier<List<Event>> _selectedEvents;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
+      .toggledOff; // Can be toggled on/off by longpressing a date
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+  }
+
+  @override
+  void dispose() {
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    // Implementation example
+    return kEvents[day] ?? [];
+  }
+
+  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+    // Implementation example
+    final days = daysInRange(start, end);
+
+    return [
+      for (final d in days) ..._getEventsForDay(d),
+    ];
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+        _rangeStart = null; // Important to clean those
+        _rangeEnd = null;
+        _rangeSelectionMode = RangeSelectionMode.toggledOff;
+      });
+
+      _selectedEvents.value = _getEventsForDay(selectedDay);
+    }
+  }
+
+  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
+    setState(() {
+      _selectedDay = null;
+      _focusedDay = focusedDay;
+      _rangeStart = start;
+      _rangeEnd = end;
+      _rangeSelectionMode = RangeSelectionMode.toggledOn;
+    });
+
+    // `start` or `end` could be null
+    if (start != null && end != null) {
+      _selectedEvents.value = _getEventsForRange(start, end);
+    } else if (start != null) {
+      _selectedEvents.value = _getEventsForDay(start);
+    } else if (end != null) {
+      _selectedEvents.value = _getEventsForDay(end);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("감사 달력"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Calendar(
-                weekendOpacityEnable: true,
-                previous: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(500),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey[300]!,
-                            spreadRadius: 1.5,
-                            blurRadius: 5,
-                            offset: Offset(2.0, 0.0))
-                      ]),
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-                next: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(500),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey[300]!,
-                            spreadRadius: 1.5,
-                            blurRadius: 5,
-                            offset: Offset(2.0, 0.0))
-                      ]),
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-                space: 20,
-                onSelected: print,
-                backgroundColor: Colors.white,
-                activeColor: Colors.orange,
-                textStyleDays: TextStyle(
-                    fontWeight: FontWeight.normal, color: Colors.black),
-                textStyleWeekDay:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                titleStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                selectedStyle:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            )
-          ],
+        title: Transform(
+          // you can forcefully translate values left side using Transform
+          transform: Matrix4.translationValues(0.0, 5.0, 0.0),
+          child: Text(
+            "감사노트 ＜오늘감사＞",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ),
       ),
-// This trailing comma makes auto-formatting nicer for build methods.
+      body: Column(
+        children: [
+          TableCalendar<Event>(
+            firstDay: kFirstDay,
+            lastDay: kLastDay,
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            rangeStartDay: _rangeStart,
+            rangeEndDay: _rangeEnd,
+            calendarFormat: _calendarFormat,
+            rangeSelectionMode: _rangeSelectionMode,
+            eventLoader: _getEventsForDay,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            calendarStyle: CalendarStyle(
+              // Use `CalendarStyle` to customize the UI
+              outsideDaysVisible: false,
+            ),
+            onDaySelected: _onDaySelected,
+            onRangeSelected: _onRangeSelected,
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              }
+            },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
+          ),
+          const SizedBox(height: 8.0),
+          Expanded(
+            child: ValueListenableBuilder<List<Event>>(
+              valueListenable: _selectedEvents,
+              builder: (context, value, _) {
+                return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 4.0,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: ListTile(
+                        onTap: () => print('${value[index]}'),
+                        title: Text('${value[index]}'),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
