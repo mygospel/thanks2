@@ -36,7 +36,16 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
   }
 
   List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
+    // kEvents[day] = [
+    //   Event('Today\'s Event 1'),
+    //   Event('Today\'s Event 1'),
+    //   Event('Today\'s Event 1')
+    // ];
+    // kEvents[day] = [
+    //   Event('Today\'s Event 1'),
+    //   Event('Today\'s Event 1'),
+    //   Event('Today\'s Event 1')
+    // ];
     return kEvents[day] ?? [];
   }
 
