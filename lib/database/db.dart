@@ -2,6 +2,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:thanks2/database/memo.dart';
 
+import '../calendar_util.dart';
+
 final String TableName = 'memos';
 
 class DBHelper {
@@ -90,10 +92,23 @@ class DBHelper {
     });
   }
 
+  Future<List<String>> memosList2Cal() async {
+    final db = await database;
+
+    // 모든 Memo를 얻기 위해 테이블에 질의합니다.
+    final List<Map<String, dynamic>> maps =
+        await db.rawQuery('SELECT * FROM $TableName order by dt desc, id desc');
+
+    // List<Map<String, dynamic>를 List<Memo>으로 변환합니다.
+    return List.generate(maps.length, (i) {
+      tEvent.addAll([Event(maps[i]['title'])]);
+
+      return maps[i]['title'];
+    });
+  }
+
   Future<Memo> memoRead(id) async {
     final db = await database;
-    print("id");
-    print(id);
     final List<Map<String, dynamic>> maps =
         await db.rawQuery('SELECT * FROM $TableName where id = $id');
     return Memo(

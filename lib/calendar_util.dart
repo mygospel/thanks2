@@ -1,8 +1,10 @@
 // Copyright 2019 Aleksander Woźniak
 // SPDX-License-Identifier: Apache-2.0
-
+import 'dart:core';
 import 'dart:collection';
 
+import './database/memo.dart';
+import './database/db.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 /// Example event class.
@@ -23,18 +25,18 @@ final kEvents = LinkedHashMap<DateTime, List<Event>>(
   hashCode: getHashCode,
 )..addAll(_kEventSource);
 
+late List<Event> tEvent = [];
+
+//tEvent.add(Event('Today\'s Event 49999999'));
+//tEvent.addAll([Event('Today\'s Event 49999999')]);
+
 var _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
     key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
     value: (item) => List.generate(
         item % 4 + 1, (index) => Event('Event $item | ${index + 1}')))
   ..addAll({
-    kToday: [
-      Event('Today\'s Event 1999999'),
-      Event('Today\'s Event 29999999'),
-    ],
+    kToday: tEvent,
   });
-
-_kEventSource
 
 int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;

@@ -20,6 +20,7 @@ import './splash.dart';
 import './edit.dart';
 import './help.dart';
 import './calendar.dart';
+import './calendar_util.dart';
 
 TextEditingController titleController = new TextEditingController();
 TextEditingController dateController = new TextEditingController();
@@ -40,7 +41,7 @@ List<Icon> arr_icon = [
   Icon(MdiIcons.batteryHeartVariant, color: Colors.white)
 ];
 
-List memoLists = [];
+late List memoLists = [];
 int sel_no = 0;
 int total_count = 0;
 int today_count = 0;
@@ -53,6 +54,16 @@ Color total_bg = Colors.white;
 Color today_bg = Colors.white;
 
 DBHelper sd = DBHelper();
+
+Future<void> _startRead() async {
+  await readTodayDB();
+
+  print("목록:");
+  print(memoLists.length);
+  for (var i = 0; i <= memoLists.length - 1; i++) {
+    tEvent.addAll([Event(memoLists[i].title)]);
+  }
+}
 
 void main() {
   runApp(new MaterialApp(
@@ -121,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
+    _startRead();
     if (view_mode == "all") {
       total_bg = Colors.lightGreen.shade100;
       today_bg = Colors.white;
@@ -159,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
           /// 오른쪽 아이콘
           new IconButton(
               icon: new Icon(Icons.calendar_view_month, color: Colors.white70),
-              tooltip: '앱소개',
+              tooltip: '달력보기',
               onPressed: () => {
                     Navigator.push(
                       context,
@@ -189,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           Expanded(
-            child: SingleChildScrollView(child: ThacksList('')),
+            child: SingleChildScrollView(child: ThanksList('')),
           ),
         ],
       ),
@@ -260,6 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: () async {
           view_mode = await "today";
           await readTodayDB();
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => MyApp()),
@@ -303,7 +315,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //readDB();
   }
 
-  Widget ThacksList(dt) {
+  Widget ThanksList(dt) {
     return FutureBuilder(builder: (context, snapshot) {
       //if (snapshot.hasData) {
 
@@ -316,6 +328,8 @@ class _MyHomePageState extends State<MyHomePage> {
           itemCount: memoLists == null ? 0 : memoLists.length,
           //itemExtent: 100.0,
           itemBuilder: (BuildContext context, int index) {
+            // 달력에 추가
+
             return Card(
                 child: Container(
                     padding: EdgeInsets.fromLTRB(3, 10, 3, 10),
