@@ -191,6 +191,8 @@ class EditRoute extends StatelessWidget {
 
     selectedDate.then((dateTime) {
       dateController.text = dateTime.toString().substring(0, 10);
+
+      print(dateTime.toString());
       /*
       Fluttertoast.showToast(
         msg: dateTime.toString(),

@@ -1,4 +1,6 @@
 import 'dart:async';
+
+import 'dart:collection';
 import 'package:calendar_calendar/calendar_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -55,14 +57,31 @@ Color today_bg = Colors.white;
 
 DBHelper sd = DBHelper();
 
-Future<void> _startRead() async {
-  await readTodayDB();
+// Future<void> _calReadToday() async {
+//   await readTodayDB();
 
-  print("목록:");
-  print(memoLists.length);
+//   print("목록:");
+//   print(memoLists.length);
+//   for (var i = 0; i <= memoLists.length - 1; i++) {
+//     tEvent.addAll([Event(memoLists[i].title)]);
+//   }
+// }
+
+Future<void> _calReadTotal() async {
+  memoLists = await sd.memos();
+
+  //late Set<String,Map<DateTime, List<Event>>> tEventMap = [{}];
+  Map<DateTime, List<Event>> map1 = {};
+  final Map<String, List<Event>> someMap = {};
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+
   for (var i = 0; i <= memoLists.length - 1; i++) {
-    tEvent.addAll([Event(memoLists[i].title)]);
+    //DateTime aa = DateTime.utc(2021, 12, 3);
+    var datekey = formatter.format(DateTime.parse(memoLists[i].dt)).toString();
+    someMap[datekey] = [Event(memoLists[i].title)];
   }
+
+  someMap.forEach((dkey, element) => _addEventsToCalendar(dkey, element));
 }
 
 void main() {
@@ -132,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _startRead();
+    _calReadTotal();
     if (view_mode == "all") {
       total_bg = Colors.lightGreen.shade100;
       today_bg = Colors.white;
@@ -397,19 +416,19 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Future<void> readDB() async {
-  var dt = DateFormat("yyyy-M-d").format(DateTime.now());
+  var dt = DateFormat("yyyy-MM-dd").format(DateTime.now());
   today_count = await sd.memosToday(dt);
   total_count = await sd.memosTotal();
   memoLists = await sd.memos();
 }
 
 Future<void> readTodayDB() async {
-  var dt = DateFormat("yyyy-M-d").format(DateTime.now());
+  var dt = DateFormat("yyyy-MM-dd").format(DateTime.now());
   memoLists = await sd.memosList(dt);
 }
 
 Future<void> reloadTotal() async {
-  var dt = DateFormat("yyyy-M-d").format(DateTime.now());
+  var dt = DateFormat("yyyy-MM-dd").format(DateTime.now());
   today_count = await sd.memosToday(dt);
   total_count = await sd.memosTotal();
 
@@ -431,14 +450,14 @@ Future<void> viewArticle(context, int id) async {
   } else {
     titleController.text = '';
     dateController.text =
-        await DateFormat("yyyy-M-d").format(DateTime.now()).toString();
+        await DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
   }
 }
 
 Future<void> deleteArticle(context) async {
   if (sel_no > 0) {
     sd.deleteMemo(sel_no);
-    var dt = DateFormat("yyyy-M-d").format(DateTime.now());
+    var dt = DateFormat("yyyy-MM-dd").format(DateTime.now());
     today_count = await sd.memosToday(dt);
     total_count = await sd.memosTotal();
 
@@ -454,4 +473,10 @@ Future<void> deleteArticle(context) async {
     context,
     MaterialPageRoute(builder: (context) => MyApp()),
   );
+}
+
+void _addEventsToCalendar(dkey, element) {
+  DateTime aDate;
+  aDate = DateTime.parse(dkey);
+  tEventAll.addAll({DateTime(aDate.year, aDate.month, aDate.day): element});
 }
