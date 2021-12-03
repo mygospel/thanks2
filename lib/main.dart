@@ -161,6 +161,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
+    reloadTotal();
+    setHeader();
+
     _calReadTotal();
     if (view_mode == "all") {
       total_bg = Colors.lightGreen.shade100;
@@ -324,6 +328,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<void> setHeader() async {
+    setState(() {
+      int icon_number = (today_count > 5) ? 5 : today_count;
+      today_color = arr_color[icon_number];
+      today_icon = arr_icon[icon_number];
+    });
+  }
+
   Widget ThanksList(dt) {
     return FutureBuilder(builder: (context, snapshot) {
       //if (snapshot.hasData) {
@@ -421,11 +433,6 @@ Future<void> reloadTotal() async {
   var dt = DateFormat("yyyy-MM-dd").format(DateTime.now());
   today_count = await sd.memosToday(dt);
   total_count = await sd.memosTotal();
-
-  int icon_number = (today_count > 5) ? 5 : today_count;
-
-  today_color = arr_color[icon_number];
-  today_icon = arr_icon[icon_number];
 }
 
 Future<void> viewArticle(context, int id) async {
@@ -438,39 +445,27 @@ Future<void> viewArticle(context, int id) async {
     Memo viewMemo = await sd.memoRead(id);
     titleController.text = await viewMemo.title;
     dateController.text = await viewMemo.dt;
-
-    if (write_btn_isVisible == true) {
-      await setState(() {
-        write_btn_isVisible = false;
-      });
-    }
   } else {
     titleController.text = '';
     dateController.text =
         await DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
-
-    if (write_btn_isVisible == false) {
-      await setState(() {
-        write_btn_isVisible = true;
-      });
-    }
   }
 }
 
-Future<void> saveDB() async {
-  var fido = Memo(
-      id: 0,
-      title: titleController.text,
-      cont: titleController.text,
-      dt: dateController.text,
-      createTime: DateTime.now().toString(),
-      editTime: DateTime.now().toString());
+// Future<void> saveDB() async {
+//   var fido = Memo(
+//       id: 0,
+//       title: titleController.text,
+//       cont: titleController.text,
+//       dt: dateController.text,
+//       createTime: DateTime.now().toString(),
+//       editTime: DateTime.now().toString());
 
-  int new_id = await sd.insertMemo(fido);
+//   int new_id = await sd.insertMemo(fido);
 
-  reloadTotal();
-  //readDB();
-}
+//   reloadTotal();
+//   //readDB();
+// }
 
 Future<void> deleteArticle(context) async {
   if (sel_no > 0) {
