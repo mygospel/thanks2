@@ -162,7 +162,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
+    // 총숫자, 오늘 숫자를 디비에서 다시 가져옴.
     reloadTotal();
+
+    // 해당내용을 화면에 적용하려면 해당 위젯에서만 가능하기 때문에 reloadTotal(); 에서는 값만 수정
+    // 아래 메소드( 위젯안에 있는 메소드 ) 에서 처리
     setHeader();
 
     _calReadTotal();
