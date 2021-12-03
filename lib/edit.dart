@@ -67,11 +67,7 @@ class EditRoute extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   saveArticle(context);
-                  /*
-                  if (sel_no > 0) {
-                    Navigator.pop(context);
-                  } else {}
-                  */
+                  //Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                     onPrimary: Colors.white,
@@ -244,8 +240,10 @@ class EditRoute extends StatelessWidget {
     needUpdate = true;
 
     if (view_mode == "all") {
+      print("전체 다시 읽기");
       await readDB();
     } else {
+      print("오늘 다시 읽기");
       await readTodayDB();
     }
 

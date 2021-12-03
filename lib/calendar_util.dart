@@ -23,7 +23,7 @@ class Event {
 var kEvents = LinkedHashMap<DateTime, List<Event>>(
   equals: isSameDay,
   hashCode: getHashCode,
-)..addAll(tEventAll);
+);
 
 late List<Event> tEvent = [];
 late LinkedHashMap<DateTime, List<Event>> tEventAll =

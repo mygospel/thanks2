@@ -24,7 +24,7 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
   @override
   void initState() {
     super.initState();
-    //_calReadTotal();
+    _calReadTotal();
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
@@ -173,4 +173,8 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
       ),
     );
   }
+}
+
+Future<void> _calReadTotal() async {
+  kEvents..addAll(tEventAll);
 }

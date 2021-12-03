@@ -31,6 +31,8 @@ List<Color> arr_color = [
   Colors.lightGreen.shade600,
   Colors.lightGreen.shade600,
   Colors.lightGreen.shade600,
+  Colors.lightGreen.shade600,
+  Colors.lightGreen.shade600,
   Colors.lightGreen.shade600
 ];
 
@@ -322,21 +324,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> saveDB() async {
-    var fido = Memo(
-        id: 0,
-        title: titleController.text,
-        cont: titleController.text,
-        dt: dateController.text,
-        createTime: DateTime.now().toString(),
-        editTime: DateTime.now().toString());
-
-    int new_id = await sd.insertMemo(fido);
-
-    reloadTotal();
-    //readDB();
-  }
-
   Widget ThanksList(dt) {
     return FutureBuilder(builder: (context, snapshot) {
       //if (snapshot.hasData) {
@@ -436,6 +423,7 @@ Future<void> reloadTotal() async {
   total_count = await sd.memosTotal();
 
   int icon_number = (today_count > 5) ? 5 : today_count;
+
   today_color = arr_color[icon_number];
   today_icon = arr_icon[icon_number];
 }
@@ -457,6 +445,21 @@ Future<void> viewArticle(context, int id) async {
   }
 }
 
+Future<void> saveDB() async {
+  var fido = Memo(
+      id: 0,
+      title: titleController.text,
+      cont: titleController.text,
+      dt: dateController.text,
+      createTime: DateTime.now().toString(),
+      editTime: DateTime.now().toString());
+
+  int new_id = await sd.insertMemo(fido);
+
+  reloadTotal();
+  //readDB();
+}
+
 Future<void> deleteArticle(context) async {
   if (sel_no > 0) {
     sd.deleteMemo(sel_no);
@@ -470,12 +473,12 @@ Future<void> deleteArticle(context) async {
     sel_no = 0;
 
     await readTodayDB();
-  }
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => MyApp()),
-  );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MyApp()),
+    );
+  } else {}
 }
 
 void _addEventsToCalendar(dkey, element) {
