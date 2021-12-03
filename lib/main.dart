@@ -72,14 +72,23 @@ Future<void> _calReadTotal() async {
 
   //late Set<String,Map<DateTime, List<Event>>> tEventMap = [{}];
   Map<DateTime, List<Event>> map1 = {};
-  final Map<String, List<Event>> someMap = {};
+  late Map<String, List<Event>> someMap = {};
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
   for (var i = 0; i <= memoLists.length - 1; i++) {
     //DateTime aa = DateTime.utc(2021, 12, 3);
     var datekey = formatter.format(DateTime.parse(memoLists[i].dt)).toString();
-    someMap[datekey] = [Event(memoLists[i].title)];
+    //someMap[datekey] = [Event(memoLists[i].title)];
+
+    if (someMap[datekey] == null) {
+      someMap[datekey] = [];
+      someMap[datekey]!.addAll([Event(memoLists[i].title)]);
+    } else {
+      someMap[datekey]!.addAll([Event(memoLists[i].title)]);
+    }
   }
+
+  //print(someMap);
 
   someMap.forEach((dkey, element) => _addEventsToCalendar(dkey, element));
 }
