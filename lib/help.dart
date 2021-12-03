@@ -46,7 +46,15 @@ class HelpApp extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.green,
                         )),
-                    subtitle: Text('''
+                    subtitle: detail_cont()),
+              )),
+        ])),
+      ),
+    );
+  }
+
+  Text detail_cont() {
+    return Text('''
 
 2020년 겨울,
 하루에 5번 감사하자는 어떤분의 이야기를 듣고,
@@ -66,18 +74,8 @@ class HelpApp extends StatelessWidget {
 한심하기 짝이 없지만 누군가에게 도움이 된다면,
 그리고 감사의 제목들이 기록되어
 훗날 다시 돌아보고 은혜앞에 다시 서게 된다면.. \' ''',
-                        style: TextStyle(
-                          color: Colors.black87,
-                        ))),
-              )),
-          Container(
-              margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Text("이 앱은 153 감사운동과 마음을 함께 합니다.",
-                  style: TextStyle(
-                    color: Colors.black87,
-                  )))
-        ])),
-      ),
-    );
+        style: TextStyle(
+          color: Colors.black87,
+        ));
   }
 }

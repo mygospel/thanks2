@@ -431,17 +431,29 @@ Future<void> reloadTotal() async {
 Future<void> viewArticle(context, int id) async {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => const EditRoute()),
+    MaterialPageRoute(builder: (context) => EditRoute()),
   );
 
   if (id > 0) {
     Memo viewMemo = await sd.memoRead(id);
     titleController.text = await viewMemo.title;
     dateController.text = await viewMemo.dt;
+
+    if (write_btn_isVisible == true) {
+      await setState(() {
+        write_btn_isVisible = false;
+      });
+    }
   } else {
     titleController.text = '';
     dateController.text =
         await DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
+
+    if (write_btn_isVisible == false) {
+      await setState(() {
+        write_btn_isVisible = true;
+      });
+    }
   }
 }
 
