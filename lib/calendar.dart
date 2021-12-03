@@ -24,6 +24,7 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
   @override
   void initState() {
     super.initState();
+    //_calReadTotal();
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
@@ -152,7 +153,7 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
                     return Container(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 12.0,
-                        vertical: 4.0,
+                        vertical: 5.0,
                       ),
                       decoration: BoxDecoration(
                         border: Border.all(),

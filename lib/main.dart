@@ -71,7 +71,6 @@ Future<void> _calReadTotal() async {
   memoLists = await sd.memos();
 
   //late Set<String,Map<DateTime, List<Event>>> tEventMap = [{}];
-  Map<DateTime, List<Event>> map1 = {};
   late Map<String, List<Event>> someMap = {};
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
@@ -199,12 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
           new IconButton(
               icon: new Icon(Icons.calendar_view_month, color: Colors.white70),
               tooltip: '달력보기',
-              onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ThanksCanledar()),
-                    )
-                  }),
+              onPressed: () => {_gotoCalendar(context)}),
 
           /// 오른쪽 아이콘
           new IconButton(
@@ -488,4 +482,12 @@ void _addEventsToCalendar(dkey, element) {
   DateTime aDate;
   aDate = DateTime.parse(dkey);
   tEventAll.addAll({DateTime(aDate.year, aDate.month, aDate.day): element});
+}
+
+void _gotoCalendar(context) {
+  _calReadTotal();
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => ThanksCanledar()),
+  );
 }

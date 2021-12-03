@@ -42,7 +42,7 @@ class HelpApp extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: ListTile(
-                    title: Text("감사노트 [매일감사]는",
+                    title: Text("감사노트 [오늘감사]는",
                         style: TextStyle(
                           color: Colors.green,
                         )),

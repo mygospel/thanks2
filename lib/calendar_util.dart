@@ -20,20 +20,20 @@ class Event {
 /// Example events.
 ///
 /// Using a [LinkedHashMap] is highly recommended if you decide to use a map.
-final kEvents = LinkedHashMap<DateTime, List<Event>>(
+var kEvents = LinkedHashMap<DateTime, List<Event>>(
   equals: isSameDay,
   hashCode: getHashCode,
-)..addAll(_kEventSource);
+)..addAll(tEventAll);
 
 late List<Event> tEvent = [];
-late List<Event> lEvent = [];
 late LinkedHashMap<DateTime, List<Event>> tEventAll =
     LinkedHashMap<DateTime, List<Event>>(
   equals: isSameDay,
   hashCode: getHashCode,
 );
 
-var _kEventSource = tEventAll;
+// var _kEventSource;
+// _kEventSource = tEventAll;
 
 int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
@@ -51,5 +51,5 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
 final kToday = DateTime.now();
 final kTommorow = DateTime(kToday.year, kToday.month, kToday.day + 1);
 final kTommorow2 = DateTime(kToday.year, kToday.month, kToday.day + 2);
-final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
-final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
+final kFirstDay = DateTime(kToday.year - 40, kToday.month, kToday.day);
+final kLastDay = DateTime(kToday.year + 3, kToday.month + 3, kToday.day);
