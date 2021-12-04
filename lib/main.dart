@@ -21,6 +21,7 @@ import './database/db.dart';
 import './splash.dart';
 import './edit.dart';
 import './help.dart';
+import './setting.dart';
 import './calendar.dart';
 import './calendar_util.dart';
 
@@ -236,13 +237,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
           /// 오른쪽 아이콘
           new IconButton(
-              icon: new Icon(Icons.help, color: Colors.white70),
+              icon: new Icon(Icons.settings, color: Colors.white70),
               tooltip: '앱소개',
               onPressed: () => {
                     //_dailyAtTimeNotification(1),
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HelpApp()),
+                      MaterialPageRoute(builder: (context) => SettingApp()),
                     )
                   }),
         ],

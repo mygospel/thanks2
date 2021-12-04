@@ -24,7 +24,21 @@ late List<Color> btn_color = [
   Colors.green,
   Colors.green
 ];
-late List<String> om = ["On", "On", "On", "On", "On"];
+
+late List<String> notice_msg_title = [
+  "오늘감사로 하루를 시작해볼까요?",
+  "오늘감사로 멋진 오후를 맞이해요~",
+  "오늘감사로 하루를 마무리해보세요~",
+  "On",
+  "On"
+];
+late List<String> notice_msg_cont = [
+  "감사를 기록하고 하루를 시작해보세요.",
+  "감사는 또 다른 감사의 만들어 냅니다.",
+  "감사는 평강으로 인도합니다.",
+  "On",
+  "On"
+];
 
 Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -57,6 +71,54 @@ class HelpAppState extends State<HelpApp> {
       print(saved_noti);
       print(btn_color);
     });
+  }
+
+  Future _dailyAtTimeNotification(int noti_id, int hh, int ii) async {
+    final notiTitle = notice_msg_title[noti_id];
+    final notiDesc = notice_msg_cont[noti_id];
+
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    final result = await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+
+    var android = AndroidNotificationDetails('id', notiTitle,
+        channelDescription: notiDesc,
+        importance: Importance.max,
+        priority: Priority.max);
+    var ios = IOSNotificationDetails();
+    var detail = NotificationDetails(android: android, iOS: ios);
+
+    if (result != null) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.deleteNotificationChannelGroup('id');
+
+      if (saved_noti[noti_id] != "1") {
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          noti_id, // id는 unique해야합니다. int값
+          notiTitle,
+          notiDesc,
+          _setNotiTime(hh, ii),
+          detail,
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          matchDateTimeComponents: DateTimeComponents.time,
+        );
+        changeNotiState(noti_id, "1");
+      } else {
+        await FlutterLocalNotificationsPlugin().cancel(noti_id);
+        changeNotiState(noti_id, "0");
+      }
+    }
+    setNoti();
   }
 
   @override
@@ -94,11 +156,9 @@ class HelpAppState extends State<HelpApp> {
                         )),
                     subtitle: detail_cont()),
               )),
-          WidgetBTN(0, 16, 25),
-          WidgetBTN(1, 16, 26),
-          WidgetBTN(2, 13, 27),
-          WidgetBTN(3, 13, 28),
-          WidgetBTN(4, 13, 29),
+          WidgetBTN(0, 08, 00),
+          WidgetBTN(1, 12, 00),
+          WidgetBTN(2, 20, 00),
           Container(
             margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Text('하루에 등록한 감사갯수에 따라 아이콘이 바뀝니다.'),
@@ -133,10 +193,7 @@ class HelpAppState extends State<HelpApp> {
         height: 40, //height of button
         width: double.infinity, //width of button equal to parent widget
         child: ElevatedButton(
-          onPressed: () => {
-            _dailyAtTimeNotification(noti_no, hh, ii),
-            setNoti(),
-          },
+          onPressed: () => {_dailyAtTimeNotification(noti_no, hh, ii)},
           style: ElevatedButton.styleFrom(
               onPrimary: Colors.white,
               textStyle: const TextStyle(fontSize: 20),
@@ -179,53 +236,6 @@ class HelpAppState extends State<HelpApp> {
         style: TextStyle(
           color: Colors.black87,
         ));
-  }
-}
-
-Future _dailyAtTimeNotification(int noti_id, int hh, int ii) async {
-  final notiTitle = '오늘감사 시작해볼까요?';
-  final notiDesc = '감사로 하루를 시작해보세요.';
-
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  final result = await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>()
-      ?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-
-  var android = AndroidNotificationDetails('id', notiTitle,
-      channelDescription: notiDesc,
-      importance: Importance.max,
-      priority: Priority.max);
-  var ios = IOSNotificationDetails();
-  var detail = NotificationDetails(android: android, iOS: ios);
-
-  if (result != null) {
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.deleteNotificationChannelGroup('id');
-
-    if (saved_noti[noti_id] != "1") {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        noti_id, // id는 unique해야합니다. int값
-        notiTitle,
-        notiDesc,
-        _setNotiTime(hh, ii),
-        detail,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
-      );
-      changeNotiState(noti_id, "1");
-    } else {
-      await FlutterLocalNotificationsPlugin().cancel(noti_id);
-      changeNotiState(noti_id, "0");
-    }
   }
 }
 
