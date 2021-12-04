@@ -132,7 +132,7 @@ class SettingAppState extends State<SettingApp> {
           // you can forcefully translate values left side using Transform
           transform: Matrix4.translationValues(0.0, 5.0, 0.0),
           child: Text(
-            "감사노트 ＜오늘감사＞",
+            "감사노트<오늘감사>는 감사의 습관을 만드는데 도움이 됩니다. 알람을 설정하시면 하루를 시작하면서, 오후를 시작하면서 그리고 하루를 마무리 하면서 감사를 기록하도록 도와줍니다.",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
