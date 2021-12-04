@@ -215,7 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        titleSpacing: 0.0,
+        titleSpacing: 15.0,
         title: Transform(
           // you can forcefully translate values left side using Transform
           transform: Matrix4.translationValues(0.0, 5.0, 0.0),
@@ -227,13 +227,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
+        leading: IconButton(
+            icon: new Icon(Icons.calendar_view_month, color: Colors.white70),
+            tooltip: '달력보기',
+            onPressed: () => {_gotoCalendar(context)}),
+
         //leading: new Icon(Icons.cake), // 왼쪽아이콘.
         actions: <Widget>[
           /// 오른쪽 아이콘
-          new IconButton(
-              icon: new Icon(Icons.calendar_view_month, color: Colors.white70),
-              tooltip: '달력보기',
-              onPressed: () => {_gotoCalendar(context)}),
 
           /// 오른쪽 아이콘
           new IconButton(
