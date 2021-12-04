@@ -1,0 +1,7 @@
+  flutter_native_splash:
+  color: "#42a5f5"
+  #background_image: "assets/background.png"
+  image: assets/splash_img.png
+
+  # 요놈은 스테이터스바 사용 X
+  fullscreen: true
