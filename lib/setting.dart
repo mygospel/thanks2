@@ -129,7 +129,7 @@ class SettingAppState extends State<SettingApp> {
       appBar: AppBar(
         title: Transform(
           // you can forcefully translate values left side using Transform
-          transform: Matrix4.translationValues(0.0, 5.0, 0.0),
+          transform: Matrix4.translationValues(0.0, 0.0, 0.0),
           child: Text(
             "<오늘감사> 알람설정",
             textAlign: TextAlign.center,

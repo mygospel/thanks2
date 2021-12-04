@@ -29,7 +29,17 @@ class EditRoute extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("새로운 감사 등록하기"),
+        title: Transform(
+          // you can forcefully translate values left side using Transform
+          transform: Matrix4.translationValues(0.0, 0.0, 0.0),
+          child: Text(
+            "감사등록하기",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

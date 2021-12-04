@@ -40,7 +40,7 @@ class HelpAppState extends State<HelpApp> {
       appBar: AppBar(
         title: Transform(
           // you can forcefully translate values left side using Transform
-          transform: Matrix4.translationValues(0.0, 5.0, 0.0),
+          transform: Matrix4.translationValues(0.0, 0.0, 0.0),
           child: Text(
             "감사노트 ＜오늘감사＞",
             textAlign: TextAlign.center,

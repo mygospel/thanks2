@@ -215,10 +215,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        titleSpacing: 15.0,
+        titleSpacing: 0.0,
         title: Transform(
           // you can forcefully translate values left side using Transform
-          transform: Matrix4.translationValues(0.0, 5.0, 0.0),
+          transform: Matrix4.translationValues(0.0, 0.0, 0.0),
           child: Text(
             widget.title,
             textAlign: TextAlign.center,
