@@ -16,30 +16,6 @@ import 'package:timezone/timezone.dart' as tz;
 
 import './main.dart';
 
-late List<String> saved_noti = ["", "", "", "", ""];
-late List<Color> btn_color = [
-  Colors.green,
-  Colors.green,
-  Colors.green,
-  Colors.green,
-  Colors.green
-];
-
-late List<String> notice_msg_title = [
-  "오늘감사로 하루를 시작해볼까요?",
-  "오늘감사로 멋진 오후를 맞이해요~",
-  "오늘감사로 하루를 마무리해보세요~",
-  "On",
-  "On"
-];
-late List<String> notice_msg_cont = [
-  "감사를 기록하고 하루를 시작해보세요.",
-  "감사는 또 다른 감사의 만들어 냅니다.",
-  "감사는 평강으로 인도합니다.",
-  "On",
-  "On"
-];
-
 Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
 class HelpApp extends StatefulWidget {
@@ -53,72 +29,6 @@ class HelpAppState extends State<HelpApp> {
   @override
   void initState() {
     super.initState();
-    setNoti();
-  }
-
-  void setNoti() async {
-    setState(() {
-      btn_color[0] =
-          ((saved_noti[0] == "1") ? Colors.green[600] : Colors.green[200])!;
-      btn_color[1] =
-          ((saved_noti[1] == "1") ? Colors.green[600] : Colors.green[200])!;
-      btn_color[2] =
-          ((saved_noti[2] == "1") ? Colors.green[600] : Colors.green[200])!;
-      btn_color[3] =
-          ((saved_noti[3] == "1") ? Colors.green[600] : Colors.green[200])!;
-      btn_color[4] =
-          ((saved_noti[4] == "1") ? Colors.green[600] : Colors.green[200])!;
-      print(saved_noti);
-      print(btn_color);
-    });
-  }
-
-  Future _dailyAtTimeNotification(int noti_id, int hh, int ii) async {
-    final notiTitle = notice_msg_title[noti_id];
-    final notiDesc = notice_msg_cont[noti_id];
-
-    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final result = await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
-
-    var android = AndroidNotificationDetails('id', notiTitle,
-        channelDescription: notiDesc,
-        importance: Importance.max,
-        priority: Priority.max);
-    var ios = IOSNotificationDetails();
-    var detail = NotificationDetails(android: android, iOS: ios);
-
-    if (result != null) {
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.deleteNotificationChannelGroup('id');
-
-      if (saved_noti[noti_id] != "1") {
-        await flutterLocalNotificationsPlugin.zonedSchedule(
-          noti_id, // id는 unique해야합니다. int값
-          notiTitle,
-          notiDesc,
-          _setNotiTime(hh, ii),
-          detail,
-          androidAllowWhileIdle: true,
-          uiLocalNotificationDateInterpretation:
-              UILocalNotificationDateInterpretation.absoluteTime,
-          matchDateTimeComponents: DateTimeComponents.time,
-        );
-        changeNotiState(noti_id, "1");
-      } else {
-        await FlutterLocalNotificationsPlugin().cancel(noti_id);
-        changeNotiState(noti_id, "0");
-      }
-    }
-    setNoti();
   }
 
   @override
@@ -142,10 +52,8 @@ class HelpAppState extends State<HelpApp> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-            child: Column(children: <Widget>[
+        child: Column(children: <Widget>[
           Card(
-              margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
               color: Colors.green.shade50,
               child: Padding(
                 padding: const EdgeInsets.all(10),
@@ -156,58 +64,38 @@ class HelpAppState extends State<HelpApp> {
                         )),
                     subtitle: detail_cont()),
               )),
-          WidgetBTN(0, 08, 00),
-          WidgetBTN(1, 12, 00),
-          WidgetBTN(2, 20, 00),
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Text('하루에 등록한 감사갯수에 따라 아이콘이 바뀝니다.'),
-          ),
           Card(
               margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
               color: Colors.green.shade50,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(MdiIcons.batteryOutline, color: Colors.black),
-                    Icon(MdiIcons.batteryLow, color: Colors.black),
-                    Icon(MdiIcons.batteryMedium, color: Colors.black),
-                    Icon(MdiIcons.batteryHigh, color: Colors.black),
-                    Icon(MdiIcons.batteryCharging, color: Colors.black),
-                    Icon(MdiIcons.batteryHeartVariant, color: Colors.black)
-                  ],
-                ),
+                child: ListTile(
+                    title: Text('''
+눈치채셨나요?
+오늘 등록한 감사갯수에 따라 아이콘이 바뀝니다.''',
+                        style: TextStyle(
+                          color: Colors.black87,
+                        )),
+                    subtitle: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(MdiIcons.batteryOutline,
+                                color: Colors.green, size: 40.0),
+                            Icon(MdiIcons.batteryLow,
+                                color: Colors.green, size: 40.0),
+                            Icon(MdiIcons.batteryMedium,
+                                color: Colors.green, size: 40.0),
+                            Icon(MdiIcons.batteryHigh,
+                                color: Colors.green, size: 40.0),
+                            Icon(MdiIcons.batteryCharging,
+                                color: Colors.green, size: 40.0),
+                            Icon(MdiIcons.batteryHeartVariant,
+                                color: Colors.green, size: 40.0)
+                          ],
+                        ))),
               )),
-        ])),
-      ),
-    );
-  }
-
-  Container WidgetBTN(int noti_no, int hh, int ii) {
-    String txt = "$hh:$ii";
-    return Container(
-      margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-      child: SizedBox(
-        height: 40, //height of button
-        width: double.infinity, //width of button equal to parent widget
-        child: ElevatedButton(
-          onPressed: () => {_dailyAtTimeNotification(noti_no, hh, ii)},
-          style: ElevatedButton.styleFrom(
-              onPrimary: Colors.white,
-              textStyle: const TextStyle(fontSize: 20),
-              primary: btn_color[noti_no], //background color of button
-              //side: BorderSide(width: 0, color: Colors.brown), //border width and color
-              elevation: 2, //elevation of button
-              padding: EdgeInsets.all(7) //content padding inside button
-              ),
-          child: Text(txt,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 23,
-                  fontWeight: FontWeight.bold)),
-        ),
+        ]),
       ),
     );
   }
@@ -237,21 +125,4 @@ class HelpAppState extends State<HelpApp> {
           color: Colors.black87,
         ));
   }
-}
-
-void changeNotiState(noti_id, state) async {
-  saved_noti[noti_id] = state;
-  final SharedPreferences prefs = await _prefs;
-  await prefs.setString("noti_$noti_id", saved_noti[noti_id]);
-}
-
-tz.TZDateTime _setNotiTime(int hh, int ii) {
-  tz.initializeTimeZones();
-  tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
-
-  final now = tz.TZDateTime.now(tz.local);
-  var scheduledDate =
-      tz.TZDateTime(tz.local, now.year, now.month, now.day, hh, ii);
-
-  return scheduledDate;
 }

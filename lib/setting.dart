@@ -15,6 +15,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import './main.dart';
+import './help.dart';
 
 late List<String> saved_noti = ["", "", "", "", ""];
 late List<Color> btn_color = [
@@ -68,8 +69,6 @@ class SettingAppState extends State<SettingApp> {
           ((saved_noti[3] == "1") ? Colors.green[600] : Colors.green[200])!;
       btn_color[4] =
           ((saved_noti[4] == "1") ? Colors.green[600] : Colors.green[200])!;
-      print(saved_noti);
-      print(btn_color);
     });
   }
 
@@ -165,14 +164,17 @@ class SettingAppState extends State<SettingApp> {
           WidgetBTN(0, 08, 00),
           WidgetBTN(1, 12, 00),
           WidgetBTN(2, 20, 00),
-          HelpBTN(),
+          HelpBTN(context),
         ])),
       ),
     );
   }
 
   Container WidgetBTN(int noti_no, int hh, int ii) {
-    String txt = "$hh:$ii";
+    var f = NumberFormat("00", "en_US");
+    String hhN = f.format(hh);
+    String iiN = f.format(ii);
+    String txt = "$hhN:$iiN";
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: SizedBox(
@@ -198,14 +200,19 @@ class SettingAppState extends State<SettingApp> {
     );
   }
 
-  Container HelpBTN() {
+  Container HelpBTN(context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 40, 0, 10),
       child: SizedBox(
         height: 40, //height of button
         width: double.infinity, //width of button equal to parent widget
         child: ElevatedButton(
-          onPressed: () => {},
+          onPressed: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HelpApp()),
+            )
+          },
           style: ElevatedButton.styleFrom(
               onPrimary: Colors.black,
               textStyle: const TextStyle(fontSize: 20),
@@ -216,8 +223,8 @@ class SettingAppState extends State<SettingApp> {
               ),
           child: Text("감사노트 <오늘감사> 는...",
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 23,
+                  color: Colors.black54,
+                  fontSize: 19,
                   fontWeight: FontWeight.bold)),
         ),
       ),
