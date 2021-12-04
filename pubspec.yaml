@@ -49,6 +49,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_cupertino_date_picker: ^1.0.26+2
   syncfusion_flutter_datepicker: ^19.3.54
+  path_provider:
+  shared_preferences: ^2.0.8
   flutter_localizations: 
     sdk: flutter
     version: ^0.0.0

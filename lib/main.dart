@@ -7,10 +7,10 @@ import 'package:path/path.dart';
 import 'package:intl/intl.dart';
 import 'package:badges/badges.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -23,6 +23,9 @@ import './edit.dart';
 import './help.dart';
 import './calendar.dart';
 import './calendar_util.dart';
+
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 TextEditingController titleController = new TextEditingController();
 TextEditingController dateController = new TextEditingController();
@@ -162,6 +165,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
+    // 로컬푸쉬를 위해
+    _initNotiSetting();
+
     // 총숫자, 오늘 숫자를 디비에서 다시 가져옴.
     reloadTotal();
 
@@ -183,6 +189,24 @@ class _MyHomePageState extends State<MyHomePage> {
     titleController.dispose();
     dateController.dispose();
     super.dispose();
+  }
+
+  void _initNotiSetting() async {
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    final initSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final initSettingsIOS = IOSInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
+    final initSettings = InitializationSettings(
+      android: initSettingsAndroid,
+      iOS: initSettingsIOS,
+    );
+    await flutterLocalNotificationsPlugin.initialize(
+      initSettings,
+    );
   }
 
   @override
@@ -215,6 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: new Icon(Icons.help, color: Colors.white70),
               tooltip: '앱소개',
               onPressed: () => {
+                    //_dailyAtTimeNotification(1),
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => HelpApp()),
@@ -236,7 +261,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         //onPressed: _incrementCounter,
         onPressed: () {
@@ -504,4 +528,56 @@ void _gotoCalendar(context) {
     context,
     MaterialPageRoute(builder: (context) => ThanksCanledar()),
   );
+}
+
+Future _dailyAtTimeNotification(int noti_id, int hh, int ii) async {
+  final notiTitle = '오늘감사 시작해볼까요?';
+  final notiDesc = '감사로 하루를 시작해보세요.';
+
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final result = await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>()
+      ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+  var android = AndroidNotificationDetails('id', notiTitle,
+      channelDescription: notiDesc,
+      importance: Importance.max,
+      priority: Priority.max);
+  var ios = IOSNotificationDetails();
+  var detail = NotificationDetails(android: android, iOS: ios);
+
+  if (result != null) {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.deleteNotificationChannelGroup('id');
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      noti_id, // id는 unique해야합니다. int값
+      notiTitle,
+      notiDesc,
+      _setNotiTime(hh, ii),
+      detail,
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+}
+
+tz.TZDateTime _setNotiTime(int hh, int ii) {
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
+
+  final now = tz.TZDateTime.now(tz.local);
+  var scheduledDate =
+      tz.TZDateTime(tz.local, now.year, now.month, now.day, hh, ii);
+
+  return scheduledDate;
 }
