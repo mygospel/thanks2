@@ -140,8 +140,8 @@ class EditRoute extends StatelessWidget {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: new Text("삭제하시겠습니까?"),
-            content: SingleChildScrollView(child: new Text("삭제하시면 복구되지 않습니다.")),
+            title: new Text("안내"),
+            content: SingleChildScrollView(child: new Text("정말로 삭제하시겠습니까?")),
             actions: <Widget>[
               new FlatButton(
                 child: new Text("취소"),
@@ -186,9 +186,9 @@ class EditRoute extends StatelessWidget {
     );
 
     selectedDate.then((dateTime) {
-      dateController.text = dateTime.toString().substring(0, 10);
+      if (dateTime != null)
+        dateController.text = dateTime.toString().substring(0, 10);
 
-      print(dateTime.toString());
       /*
       Fluttertoast.showToast(
         msg: dateTime.toString(),
@@ -201,16 +201,18 @@ class EditRoute extends StatelessWidget {
 
   Future<void> saveArticle(context) async {
     if (titleController.text.trim() == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('내용을 입력해주세요.')),
-      );
+      _showDialog(context, '내용을 입력해주세요.');
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('내용을 입력해주세요.')),
+      // );
       return;
     }
 
     if (dateController.text.trim() == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('날자를 입력해주세요.')),
-      );
+      _showDialog(context, '날자를 입력해주세요.');
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('날자를 입력해주세요.')),
+      // );
       return;
     }
 
@@ -250,4 +252,25 @@ class EditRoute extends StatelessWidget {
       MaterialPageRoute(builder: (context) => MyApp()),
     );
   }
+}
+
+Future<void> _showDialog(BuildContext context, msg) async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        //title: new Text("안내"),
+        content: SingleChildScrollView(child: new Text(msg)),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text("Close"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

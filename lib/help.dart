@@ -48,6 +48,27 @@ class HelpApp extends StatelessWidget {
                         )),
                     subtitle: detail_cont()),
               )),
+          Container(
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Text('하루에 등록한 감사갯수에 따라 아이콘이 바뀝니다.'),
+          ),
+          Card(
+              margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+              color: Colors.green.shade50,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(MdiIcons.batteryOutline, color: Colors.black),
+                    Icon(MdiIcons.batteryLow, color: Colors.black),
+                    Icon(MdiIcons.batteryMedium, color: Colors.black),
+                    Icon(MdiIcons.batteryHigh, color: Colors.black),
+                    Icon(MdiIcons.batteryCharging, color: Colors.black),
+                    Icon(MdiIcons.batteryHeartVariant, color: Colors.black)
+                  ],
+                ),
+              )),
         ])),
       ),
     );
@@ -64,7 +85,7 @@ class HelpApp extends StatelessWidget {
 미루지 말고 생각났을 때 바로 기록해보려고,
 내손안에 두었다 다시 돌아보려고,
 
-그렇게 감사노트가 만들어졌습니다.
+그렇게 감사노트<오늘감사>가 만들어졌습니다.
 
 개발자도 몸부림 치고 있다고 할까요?
 우리 함께 몸부림 쳐 볼까요?
