@@ -132,7 +132,7 @@ class SettingAppState extends State<SettingApp> {
           // you can forcefully translate values left side using Transform
           transform: Matrix4.translationValues(0.0, 5.0, 0.0),
           child: Text(
-            "감사노트<오늘감사>는 감사의 습관을 만드는데 도움이 됩니다. 알람을 설정하시면 하루를 시작하면서, 오후를 시작하면서 그리고 하루를 마무리 하면서 감사를 기록하도록 도와줍니다.",
+            "<오늘감사> 알람설정",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
@@ -150,7 +150,13 @@ class SettingAppState extends State<SettingApp> {
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: ListTile(
-                  title: Text("감사노트 [오늘감사]는",
+                  title: Text('''
+알람을 설정하시면 하루를 시작하면서, 
+오후를 시작하면서,
+그리고 하루를 마무리 하면서 
+감사를 기록하도록 도와줍니다.
+
+원하시는 시간을 클릭하시면 설정됩니다.''',
                       style: TextStyle(
                         color: Colors.green,
                       )),
@@ -159,6 +165,7 @@ class SettingAppState extends State<SettingApp> {
           WidgetBTN(0, 08, 00),
           WidgetBTN(1, 12, 00),
           WidgetBTN(2, 20, 00),
+          HelpBTN(),
         ])),
       ),
     );
@@ -182,6 +189,32 @@ class SettingAppState extends State<SettingApp> {
               padding: EdgeInsets.all(7) //content padding inside button
               ),
           child: Text(txt,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold)),
+        ),
+      ),
+    );
+  }
+
+  Container HelpBTN() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 40, 0, 10),
+      child: SizedBox(
+        height: 40, //height of button
+        width: double.infinity, //width of button equal to parent widget
+        child: ElevatedButton(
+          onPressed: () => {},
+          style: ElevatedButton.styleFrom(
+              onPrimary: Colors.black,
+              textStyle: const TextStyle(fontSize: 20),
+              primary: Colors.blue[50], //background color of button
+              //side: BorderSide(width: 0, color: Colors.brown), //border width and color
+              elevation: 2, //elevation of button
+              padding: EdgeInsets.all(7) //content padding inside button
+              ),
+          child: Text("감사노트 <오늘감사> 는...",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 23,
