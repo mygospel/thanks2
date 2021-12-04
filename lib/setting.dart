@@ -40,6 +40,7 @@ late List<String> notice_msg_cont = [
   "On",
   "On"
 ];
+late bool read_noti = false;
 
 Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -58,6 +59,18 @@ class SettingAppState extends State<SettingApp> {
   }
 
   void setNoti() async {
+    final SharedPreferences prefs = await _prefs;
+    if (read_noti == false) {
+      for (var i = 0; i <= 4; i++) {
+        if (prefs.getString("noti_$i") == "1") {
+          saved_noti[i] = "1";
+        } else {
+          saved_noti[i] = "0";
+        }
+      }
+      print(saved_noti);
+      read_noti = true;
+    }
     setState(() {
       btn_color[0] =
           ((saved_noti[0] == "1") ? Colors.green[600] : Colors.green[200])!;
@@ -71,6 +84,8 @@ class SettingAppState extends State<SettingApp> {
           ((saved_noti[4] == "1") ? Colors.green[600] : Colors.green[200])!;
     });
   }
+
+  void getNotiState() async {}
 
   Future _dailyAtTimeNotification(int noti_id, int hh, int ii) async {
     final notiTitle = notice_msg_title[noti_id];
@@ -236,6 +251,7 @@ void changeNotiState(noti_id, state) async {
   saved_noti[noti_id] = state;
   final SharedPreferences prefs = await _prefs;
   await prefs.setString("noti_$noti_id", saved_noti[noti_id]);
+  //setNoti();
 }
 
 tz.TZDateTime _setNotiTime(int hh, int ii) {
