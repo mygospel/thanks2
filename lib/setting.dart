@@ -27,20 +27,19 @@ late List<Color> btn_color = [
   Colors.green,
   Colors.green
 ];
-late List<String> aaaaa = ["111111", "222222", "333333", "44444", "55555"];
 late List<String> notice_msg_title = [
   "오늘감사로 하루를 시작해볼까요?",
   "오늘감사로 멋진 오후를 맞이해요~",
   "오늘감사로 하루를 마무리해보세요~",
-  "On",
-  "On"
+  "",
+  ""
 ];
 late List<String> notice_msg_cont = [
   "감사를 기록하고 하루를 시작해보세요.",
   "감사는 또 다른 감사의 만들어 냅니다.",
   "감사는 평강으로 인도합니다.",
-  "On",
-  "On"
+  "",
+  ""
 ];
 late bool read_noti = false;
 
@@ -95,8 +94,8 @@ class SettingAppState extends State<SettingApp> {
           //saved_time[i] = "";
         }
       }
-      print(saved_noti);
-      print(saved_time);
+      //print(saved_noti);
+      //print(saved_time);
       read_noti = true;
     }
     setState(() {
@@ -117,7 +116,7 @@ class SettingAppState extends State<SettingApp> {
 
   Future _dailyAtTimeNotificationFromNotiNo(int notiId) async {
     int hh = getTime2HH(saved_time[notiId]);
-    int ii = getTime2HH(saved_time[notiId]);
+    int ii = getTime2II(saved_time[notiId]);
     _dailyAtTimeNotification(notiId, hh, ii, false);
   }
 
@@ -125,6 +124,9 @@ class SettingAppState extends State<SettingApp> {
       int noti_id, int hh, int ii, bool state) async {
     final notiTitle = notice_msg_title[noti_id];
     final notiDesc = notice_msg_cont[noti_id];
+
+    // 시간을 변경한 경우는 false 상태로 true 가 되게 한다.
+    if (state == true) saved_noti[noti_id] = false;
 
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final result = await flutterLocalNotificationsPlugin
@@ -148,7 +150,6 @@ class SettingAppState extends State<SettingApp> {
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.deleteNotificationChannelGroup('id');
-
       if (saved_noti[noti_id] != true) {
         await flutterLocalNotificationsPlugin.zonedSchedule(
           noti_id, // id는 unique해야합니다. int값
@@ -162,13 +163,15 @@ class SettingAppState extends State<SettingApp> {
           matchDateTimeComponents: DateTimeComponents.time,
         );
         changeNotiState(noti_id, true);
-        print("등록");
+        print("등록 $noti_id $notiTitle = $hh:$ii");
       } else {
         await FlutterLocalNotificationsPlugin().cancel(noti_id);
-        if (state != true) changeNotiState(noti_id, false);
-        print("취소");
+        if (state != true) {
+          changeNotiState(noti_id, false);
+          print("취소 $noti_id = $hh:$ii");
+        }
       }
-      print(saved_noti);
+      //print(saved_noti);
     }
     setNoti();
   }
@@ -308,27 +311,20 @@ class SettingAppState extends State<SettingApp> {
     selectedTime.then((timeOfDay) {
       setState(() {
         if (timeOfDay != null) {
-          saved_noti[noti_no] = true;
+          // 아래에서 바꿔줌.. .saved_noti[noti_no] = true;
           saved_time[noti_no] = '${timeOfDay.hour}:${timeOfDay.minute}';
           saved_timeTxt[noti_no] = '${timeOfDay.hour}:${timeOfDay.minute}';
-          print("시작");
-          print(timeOfDay.hour);
-          print(timeOfDay.minute);
-          print("끝");
+          //print("시작");
+          //print(timeOfDay.hour);
+          //print(timeOfDay.minute);
+          //print("끝");
           _dailyAtTimeNotification(
               noti_no, timeOfDay.hour, timeOfDay.minute, true);
         }
 
-        print(saved_timeTxt[noti_no]);
-        print(saved_timeTxt);
+        //print(saved_timeTxt[noti_no]);
+        //print(saved_timeTxt);
       });
-
-      // setState(() {
-      //   print("시간변경시작");
-      //   aaaaa[1] = "테스트완료";
-      //   print("시간변경종료");
-      //   print(saved_timeTxt);
-      // });
     });
   }
 }
