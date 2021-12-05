@@ -17,7 +17,9 @@ import 'package:timezone/timezone.dart' as tz;
 import './main.dart';
 import './help.dart';
 
-late List<String> saved_noti = ["", "", "", "", ""];
+late List<String> saved_time = ["08:30", "13:30", "21:30", "", ""];
+late List<String> saved_timeTxt = ["", "", "", "", ""];
+late List<bool> saved_noti = [false, false, false, false, false];
 late List<Color> btn_color = [
   Colors.green,
   Colors.green,
@@ -25,7 +27,7 @@ late List<Color> btn_color = [
   Colors.green,
   Colors.green
 ];
-
+late List<String> aaaaa = ["111111", "222222", "333333", "44444", "55555"];
 late List<String> notice_msg_title = [
   "오늘감사로 하루를 시작해볼까요?",
   "오늘감사로 멋진 오후를 맞이해요~",
@@ -42,7 +44,27 @@ late List<String> notice_msg_cont = [
 ];
 late bool read_noti = false;
 
+var time_f = NumberFormat("00", "en_US");
+
 Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+int getTime2HH(tm) {
+  List<String> tmp = tm.split(':');
+  if (tmp[0].isNotEmpty) {
+    return int.parse(tmp[0]);
+  } else {
+    return 0;
+  }
+}
+
+int getTime2II(tm) {
+  List<String> tmp = tm.split(':');
+  if (tmp[1].isNotEmpty) {
+    return int.parse(tmp[1]);
+  } else {
+    return 0;
+  }
+}
 
 class SettingApp extends StatefulWidget {
   @override
@@ -62,32 +84,45 @@ class SettingAppState extends State<SettingApp> {
     final SharedPreferences prefs = await _prefs;
     if (read_noti == false) {
       for (var i = 0; i <= 4; i++) {
-        if (prefs.getString("noti_$i") == "1") {
-          saved_noti[i] = "1";
+        if (prefs.getBool("notiState_$i") != null) {
+          saved_noti[i] = prefs.getBool("notiState_$i")!;
         } else {
-          saved_noti[i] = "0";
+          saved_noti[i] = false;
+        }
+        if (prefs.getString("notiTime_$i") != null) {
+          saved_time[i] = prefs.getString("notiTime_$i")!;
+        } else {
+          //saved_time[i] = "";
         }
       }
       print(saved_noti);
+      print(saved_time);
       read_noti = true;
     }
     setState(() {
       btn_color[0] =
-          ((saved_noti[0] == "1") ? Colors.green[600] : Colors.green[200])!;
+          ((saved_noti[0] == true) ? Colors.green[600] : Colors.green[200])!;
       btn_color[1] =
-          ((saved_noti[1] == "1") ? Colors.green[600] : Colors.green[200])!;
+          ((saved_noti[1] == true) ? Colors.green[600] : Colors.green[200])!;
       btn_color[2] =
-          ((saved_noti[2] == "1") ? Colors.green[600] : Colors.green[200])!;
+          ((saved_noti[2] == true) ? Colors.green[600] : Colors.green[200])!;
       btn_color[3] =
-          ((saved_noti[3] == "1") ? Colors.green[600] : Colors.green[200])!;
+          ((saved_noti[3] == true) ? Colors.green[600] : Colors.green[200])!;
       btn_color[4] =
-          ((saved_noti[4] == "1") ? Colors.green[600] : Colors.green[200])!;
+          ((saved_noti[4] == true) ? Colors.green[600] : Colors.green[200])!;
     });
   }
 
   void getNotiState() async {}
 
-  Future _dailyAtTimeNotification(int noti_id, int hh, int ii) async {
+  Future _dailyAtTimeNotificationFromNotiNo(int notiId) async {
+    int hh = getTime2HH(saved_time[notiId]);
+    int ii = getTime2HH(saved_time[notiId]);
+    _dailyAtTimeNotification(notiId, hh, ii, false);
+  }
+
+  Future _dailyAtTimeNotification(
+      int noti_id, int hh, int ii, bool state) async {
     final notiTitle = notice_msg_title[noti_id];
     final notiDesc = notice_msg_cont[noti_id];
 
@@ -114,7 +149,7 @@ class SettingAppState extends State<SettingApp> {
               AndroidFlutterLocalNotificationsPlugin>()
           ?.deleteNotificationChannelGroup('id');
 
-      if (saved_noti[noti_id] != "1") {
+      if (saved_noti[noti_id] != true) {
         await flutterLocalNotificationsPlugin.zonedSchedule(
           noti_id, // id는 unique해야합니다. int값
           notiTitle,
@@ -126,11 +161,14 @@ class SettingAppState extends State<SettingApp> {
               UILocalNotificationDateInterpretation.absoluteTime,
           matchDateTimeComponents: DateTimeComponents.time,
         );
-        changeNotiState(noti_id, "1");
+        changeNotiState(noti_id, true);
+        print("등록");
       } else {
         await FlutterLocalNotificationsPlugin().cancel(noti_id);
-        changeNotiState(noti_id, "0");
+        if (state != true) changeNotiState(noti_id, false);
+        print("취소");
       }
+      print(saved_noti);
     }
     setNoti();
   }
@@ -176,42 +214,57 @@ class SettingAppState extends State<SettingApp> {
                       )),
                 ),
               )),
-          WidgetBTN(0, 08, 00),
-          WidgetBTN(1, 12, 00),
-          WidgetBTN(2, 20, 00),
+          WidgetBTN(
+              context, 0, getTime2HH(saved_time[0]), getTime2II(saved_time[0])),
+          WidgetBTN(
+              context, 1, getTime2HH(saved_time[1]), getTime2II(saved_time[1])),
+          WidgetBTN(
+              context, 2, getTime2HH(saved_time[2]), getTime2II(saved_time[2])),
           HelpBTN(context),
         ])),
       ),
     );
   }
 
-  Container WidgetBTN(int noti_no, int hh, int ii) {
-    var f = NumberFormat("00", "en_US");
-    String hhN = f.format(hh);
-    String iiN = f.format(ii);
-    String txt = "$hhN:$iiN";
+  Container WidgetBTN(context, int noti_no, int hh, int ii) {
+    // String hhN = f.format(hh);
+    // String iiN = f.format(ii);
+    // saved_timeTxt[noti_no] = "$hhN:$iiN";
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: SizedBox(
-        height: 40, //height of button
-        width: double.infinity, //width of button equal to parent widget
-        child: ElevatedButton(
-          onPressed: () => {_dailyAtTimeNotification(noti_no, hh, ii)},
-          style: ElevatedButton.styleFrom(
-              onPrimary: Colors.white,
-              textStyle: const TextStyle(fontSize: 20),
-              primary: btn_color[noti_no], //background color of button
-              //side: BorderSide(width: 0, color: Colors.brown), //border width and color
-              elevation: 2, //elevation of button
-              padding: EdgeInsets.all(7) //content padding inside button
-              ),
-          child: Text(txt,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 23,
-                  fontWeight: FontWeight.bold)),
-        ),
-      ),
+          height: 40, //height of button
+          width: double.infinity, //width of button equal to parent widget
+          child: Row(children: [
+            ElevatedButton(
+              onPressed: () {
+                showTimePickerPop(context, noti_no);
+              },
+              style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                  primary: btn_color[noti_no], //background color of button
+                  //side: BorderSide(width: 0, color: Colors.brown), //border width and color
+                  elevation: 2, //elevation of button
+                  padding: EdgeInsets.all(7) //content padding inside button
+                  ),
+              child: Text(saved_timeTxt[noti_no],
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold)),
+            ),
+            Switch(
+              value: saved_noti[noti_no],
+              onChanged: (value) {
+                setState(() {
+                  //changeNotiState(noti_no, value);
+                  _dailyAtTimeNotificationFromNotiNo(noti_no);
+                });
+              },
+              activeTrackColor: Colors.greenAccent,
+              activeColor: Colors.green,
+            )
+          ])),
     );
   }
 
@@ -245,12 +298,45 @@ class SettingAppState extends State<SettingApp> {
       ),
     );
   }
+
+  void showTimePickerPop(context, noti_no) {
+    String _selectedTime;
+    Future<TimeOfDay?> selectedTime = showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    selectedTime.then((timeOfDay) {
+      setState(() {
+        if (timeOfDay != null) {
+          saved_noti[noti_no] = true;
+          saved_time[noti_no] = '${timeOfDay.hour}:${timeOfDay.minute}';
+          saved_timeTxt[noti_no] = '${timeOfDay.hour}:${timeOfDay.minute}';
+          print("시작");
+          print(timeOfDay.hour);
+          print(timeOfDay.minute);
+          print("끝");
+          _dailyAtTimeNotification(
+              noti_no, timeOfDay.hour, timeOfDay.minute, true);
+        }
+
+        print(saved_timeTxt[noti_no]);
+        print(saved_timeTxt);
+      });
+
+      // setState(() {
+      //   print("시간변경시작");
+      //   aaaaa[1] = "테스트완료";
+      //   print("시간변경종료");
+      //   print(saved_timeTxt);
+      // });
+    });
+  }
 }
 
 void changeNotiState(noti_id, state) async {
   saved_noti[noti_id] = state;
   final SharedPreferences prefs = await _prefs;
-  await prefs.setString("noti_$noti_id", saved_noti[noti_id]);
+  await prefs.setBool("notiState_$noti_id", saved_noti[noti_id]);
   //setNoti();
 }
 
