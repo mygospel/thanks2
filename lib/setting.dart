@@ -81,24 +81,29 @@ class SettingAppState extends State<SettingApp> {
 
   void setNoti() async {
     final SharedPreferences prefs = await _prefs;
-    if (read_noti == false) {
-      for (var i = 0; i <= 4; i++) {
-        if (prefs.getBool("notiState_$i") != null) {
-          saved_noti[i] = prefs.getBool("notiState_$i")!;
-        } else {
-          saved_noti[i] = false;
-        }
-        if (prefs.getString("notiTime_$i") != null) {
-          saved_time[i] = prefs.getString("notiTime_$i")!;
-        } else {
-          //saved_time[i] = "";
-        }
-      }
-      //print(saved_noti);
-      //print(saved_time);
-      read_noti = true;
-    }
     setState(() {
+      if (read_noti == false) {
+        for (var i = 0; i <= 4; i++) {
+          if (prefs.getBool("notiState_$i") != null) {
+            saved_noti[i] = prefs.getBool("notiState_$i")!;
+          } else {
+            saved_noti[i] = false;
+          }
+          if (prefs.getString("notiTime_$i") != null &&
+              prefs.getString("notiTime_$i") != "") {
+            saved_time[i] = prefs.getString("notiTime_$i")!;
+            String hhN = time_f.format(getTime2HH(saved_time[i]));
+            String iiN = time_f.format(getTime2HH(saved_time[i]));
+            saved_timeTxt[i] = "$hhN:$iiN";
+          } else {
+            String hhN = time_f.format(getTime2HH(saved_time[i]));
+            String iiN = time_f.format(getTime2HH(saved_time[i]));
+            saved_timeTxt[i] = "$hhN:$iiN";
+          }
+        }
+
+        read_noti = true;
+      }
       btn_color[0] =
           ((saved_noti[0] == true) ? Colors.green[600] : Colors.green[200])!;
       btn_color[1] =
@@ -162,17 +167,18 @@ class SettingAppState extends State<SettingApp> {
               UILocalNotificationDateInterpretation.absoluteTime,
           matchDateTimeComponents: DateTimeComponents.time,
         );
-        changeNotiState(noti_id, true);
+        saveNotiState(noti_id, true);
         print("등록 $noti_id $notiTitle = $hh:$ii");
       } else {
         await FlutterLocalNotificationsPlugin().cancel(noti_id);
         if (state != true) {
-          changeNotiState(noti_id, false);
+          saveNotiState(noti_id, false);
           print("취소 $noti_id = $hh:$ii");
         }
       }
       //print(saved_noti);
     }
+    saveNotiTime(noti_id, "$hh:$ii");
     setNoti();
   }
 
@@ -180,7 +186,7 @@ class SettingAppState extends State<SettingApp> {
   Widget build(BuildContext context) {
     late FocusNode myFocusNode;
     myFocusNode = FocusNode();
-
+    print("위젯그리기 시작");
     return Scaffold(
       appBar: AppBar(
         title: Transform(
@@ -260,7 +266,7 @@ class SettingAppState extends State<SettingApp> {
               value: saved_noti[noti_no],
               onChanged: (value) {
                 setState(() {
-                  //changeNotiState(noti_no, value);
+                  //saveNotiState(noti_no, value);
                   _dailyAtTimeNotificationFromNotiNo(noti_no);
                 });
               },
@@ -329,10 +335,17 @@ class SettingAppState extends State<SettingApp> {
   }
 }
 
-void changeNotiState(noti_id, state) async {
+void saveNotiState(noti_id, state) async {
   saved_noti[noti_id] = state;
   final SharedPreferences prefs = await _prefs;
   await prefs.setBool("notiState_$noti_id", saved_noti[noti_id]);
+  //setNoti();
+}
+
+void saveNotiTime(noti_id, timeText) async {
+  saved_time[noti_id] = timeText;
+  final SharedPreferences prefs = await _prefs;
+  await prefs.setString("notiTime_$noti_id", saved_time[noti_id]);
   //setNoti();
 }
 
