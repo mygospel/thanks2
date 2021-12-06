@@ -17,7 +17,7 @@ import 'package:timezone/timezone.dart' as tz;
 import './main.dart';
 import './help.dart';
 
-late List<String> saved_time = ["08:30", "13:30", "21:30", "", ""];
+late List<String> saved_time = ["08:30", "13:30", "21:30", "00:00", "00:00"];
 late List<String> saved_timeTxt = ["", "", "", "", ""];
 late List<bool> saved_noti = [false, false, false, false, false];
 late List<Color> btn_color = [
@@ -93,11 +93,11 @@ class SettingAppState extends State<SettingApp> {
               prefs.getString("notiTime_$i") != "") {
             saved_time[i] = prefs.getString("notiTime_$i")!;
             String hhN = time_f.format(getTime2HH(saved_time[i]));
-            String iiN = time_f.format(getTime2HH(saved_time[i]));
+            String iiN = time_f.format(getTime2II(saved_time[i]));
             saved_timeTxt[i] = "$hhN:$iiN";
           } else {
             String hhN = time_f.format(getTime2HH(saved_time[i]));
-            String iiN = time_f.format(getTime2HH(saved_time[i]));
+            String iiN = time_f.format(getTime2II(saved_time[i]));
             saved_timeTxt[i] = "$hhN:$iiN";
           }
         }
@@ -309,17 +309,28 @@ class SettingAppState extends State<SettingApp> {
   }
 
   void showTimePickerPop(context, noti_no) {
-    String _selectedTime;
+    TimeOfDay defaultTime;
+    if (saved_time[noti_no] != null && saved_time[noti_no] != "") {
+      int hh = int.parse(time_f.format(getTime2HH(saved_time[noti_no])));
+      int ii = int.parse(time_f.format(getTime2II(saved_time[noti_no])));
+
+      defaultTime = TimeOfDay(hour: hh, minute: ii);
+    } else {
+      defaultTime = TimeOfDay.now();
+    }
+
     Future<TimeOfDay?> selectedTime = showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: defaultTime,
     );
     selectedTime.then((timeOfDay) {
       setState(() {
         if (timeOfDay != null) {
           // 아래에서 바꿔줌.. .saved_noti[noti_no] = true;
           saved_time[noti_no] = '${timeOfDay.hour}:${timeOfDay.minute}';
-          saved_timeTxt[noti_no] = '${timeOfDay.hour}:${timeOfDay.minute}';
+          String hh = time_f.format(timeOfDay.hour);
+          String ii = time_f.format(timeOfDay.minute);
+          saved_timeTxt[noti_no] = '$hh:$ii';
           //print("시작");
           //print(timeOfDay.hour);
           //print(timeOfDay.minute);
