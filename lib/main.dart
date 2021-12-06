@@ -61,6 +61,8 @@ Icon today_icon = arr_icon[0];
 Color total_bg = Colors.white;
 Color today_bg = Colors.white;
 
+bool EditReturnMode = false;
+
 DBHelper sd = DBHelper();
 
 // Future<void> _calReadToday() async {
@@ -87,9 +89,9 @@ Future<void> _calReadTotal() async {
 
     if (someMap[datekey] == null) {
       someMap[datekey] = [];
-      someMap[datekey]!.addAll([Event(memoLists[i].title)]);
+      someMap[datekey]!.addAll([Event(memoLists[i].title, memoLists[i].id)]);
     } else {
-      someMap[datekey]!.addAll([Event(memoLists[i].title)]);
+      someMap[datekey]!.addAll([Event(memoLists[i].title, memoLists[i].id)]);
     }
   }
 

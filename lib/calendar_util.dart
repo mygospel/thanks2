@@ -10,11 +10,13 @@ import 'package:table_calendar/table_calendar.dart';
 /// Example event class.
 class Event {
   final String title;
+  final int id;
 
-  const Event(this.title);
+  const Event(this.title, this.id);
 
   @override
-  String toString() => title;
+  String toString() => "$id.$title";
+  int getId() => id;
 }
 
 /// Example events.

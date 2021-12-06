@@ -24,7 +24,9 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
   @override
   void initState() {
     super.initState();
-    _calReadTotal();
+
+    //_calReadTotal();
+    _getReadTotal();
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
@@ -160,8 +162,15 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
+                        onTap: () => {
+                          EditReturnMode = true,
+                          sel_no = getEventOnlyId('${value[index]}'),
+                          print(getEventOnlyId('${value[index]}')),
+                          viewArticle(
+                              context, getEventOnlyId('${value[index]}'))
+                          //print('$index : ${value[index]}'),
+                        },
+                        title: getEventOnlyTitle('${value[index]}'),
                       ),
                     );
                   },
@@ -175,6 +184,16 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
   }
 }
 
-Future<void> _calReadTotal() async {
+Widget getEventOnlyTitle(str) {
+  var pos = str.indexOf('.', 1) + 1;
+  return Text(str.substring(pos));
+}
+
+int getEventOnlyId(str) {
+  var pos = str.indexOf('.', 1);
+  return int.parse(str.substring(0, pos));
+}
+
+Future<void> _getReadTotal() async {
   kEvents..addAll(tEventAll);
 }

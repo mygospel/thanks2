@@ -15,6 +15,7 @@ import './database/memo.dart';
 import './database/db.dart';
 import './main.dart';
 import './splash.dart';
+import './calendar.dart';
 import './help.dart';
 
 String _selectedTime = "";
@@ -257,10 +258,19 @@ class EditRoute extends StatelessWidget {
       await readTodayDB();
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MyApp()),
-    );
+    if (EditReturnMode == true) {
+      EditReturnMode = false;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ThanksCanledar()),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MyApp()),
+      );
+    }
   }
 }
 

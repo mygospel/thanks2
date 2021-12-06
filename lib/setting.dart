@@ -17,7 +17,7 @@ import 'package:timezone/timezone.dart' as tz;
 import './main.dart';
 import './help.dart';
 
-late List<String> saved_time = ["08:30", "13:30", "21:30", "00:00", "00:00"];
+late List<String> saved_time = ["09:10", "13:10", "21:10", "00:00", "00:00"];
 late List<String> saved_timeTxt = ["", "", "", "", ""];
 late List<bool> saved_noti = [false, false, false, false, false];
 late List<Color> btn_color = [
@@ -168,12 +168,12 @@ class SettingAppState extends State<SettingApp> {
           matchDateTimeComponents: DateTimeComponents.time,
         );
         saveNotiState(noti_id, true);
-        print("등록 $noti_id $notiTitle = $hh:$ii");
+        //print("등록 $noti_id $notiTitle = $hh:$ii");
       } else {
         await FlutterLocalNotificationsPlugin().cancel(noti_id);
         if (state != true) {
           saveNotiState(noti_id, false);
-          print("취소 $noti_id = $hh:$ii");
+          //print("취소 $noti_id = $hh:$ii");
         }
       }
       //print(saved_noti);
@@ -186,7 +186,6 @@ class SettingAppState extends State<SettingApp> {
   Widget build(BuildContext context) {
     late FocusNode myFocusNode;
     myFocusNode = FocusNode();
-    print("위젯그리기 시작");
     return Scaffold(
       appBar: AppBar(
         title: Transform(

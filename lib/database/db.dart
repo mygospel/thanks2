@@ -101,7 +101,7 @@ class DBHelper {
 
     // List<Map<String, dynamic>를 List<Memo>으로 변환합니다.
     return List.generate(maps.length, (i) {
-      tEvent.addAll([Event(maps[i]['title'])]);
+      tEvent.addAll([Event(maps[i]['title'], maps[i]['id'])]);
 
       return maps[i]['title'];
     });
