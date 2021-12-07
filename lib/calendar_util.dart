@@ -2,9 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import 'dart:core';
 import 'dart:collection';
-
-import './database/memo.dart';
-import './database/db.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 /// Example event class.

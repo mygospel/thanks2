@@ -1,22 +1,7 @@
 import 'dart:async';
-import 'package:calendar_calendar/calendar_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:intl/intl.dart';
-import 'package:badges/badges.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:material_design_icons_flutter/icon_map.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-
 import './database/memo.dart';
-import './database/db.dart';
 import './main.dart';
-import './splash.dart';
-import './calendar.dart';
-import './help.dart';
 
 String _selectedTime = "";
 
@@ -242,10 +227,12 @@ class EditRoute extends StatelessWidget {
       if (new_id > 0) {}
     }
 
+    await reloadTotal();
+
     sel_no = 0;
 
     //print("저장후 reloadTotal 실행");
-    await reloadTotal();
+    changeFocusDate(dateController.text);
 
     titleController.text = "";
     dateController.text = "";
@@ -258,12 +245,14 @@ class EditRoute extends StatelessWidget {
       await readTodayDB();
     }
 
-    if (EditReturnMode == true) {
-      EditReturnMode = false;
+    //var currentTime = new DateTime(now.year, now.month, now.day);
 
+    if (EditReturnMode == true) {
+      await readDB();
+      //Navigator.pop(context);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ThanksCanledar()),
+        MaterialPageRoute(builder: (context) => MyApp()),
       );
     } else {
       Navigator.push(
@@ -272,6 +261,10 @@ class EditRoute extends StatelessWidget {
       );
     }
   }
+}
+
+Future<void> changeFocusDate(dt) async {
+  //kToday = dt;
 }
 
 Future<void> _showDialog(BuildContext context, msg) async {

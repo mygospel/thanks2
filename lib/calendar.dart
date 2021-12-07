@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import './main.dart';
-import './edit.dart';
-import './help.dart';
 import 'calendar_util.dart';
 
 class ThanksCanledar extends StatefulWidget {

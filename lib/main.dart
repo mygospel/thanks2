@@ -1,21 +1,12 @@
 import 'dart:async';
 
-import 'dart:collection';
-import 'package:calendar_calendar/calendar_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:intl/intl.dart';
 import 'package:badges/badges.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import './database/memo.dart';
 import './database/db.dart';
 import './splash.dart';
@@ -186,6 +177,19 @@ class _MyHomePageState extends State<MyHomePage> {
       total_bg = Colors.white;
       today_bg = Colors.lightGreen.shade100;
     }
+
+    new Future.delayed(Duration.zero, () {
+      goCal(context);
+    });
+  }
+
+  void goCal(Context context) {
+    EditReturnMode = false;
+    //print("달력으로 돌아가자.");
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => ThanksCanledar()),
+    // );
   }
 
   void dispose() {

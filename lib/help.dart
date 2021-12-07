@@ -1,20 +1,7 @@
 import 'dart:async';
-import 'package:calendar_calendar/calendar_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:intl/intl.dart';
-import 'package:badges/badges.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-
-import './main.dart';
 
 Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
