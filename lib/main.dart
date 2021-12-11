@@ -7,6 +7,7 @@ import 'package:badges/badges.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './database/memo.dart';
 import './database/db.dart';
 import './splash.dart';
@@ -21,6 +22,8 @@ import 'package:timezone/timezone.dart' as tz;
 
 TextEditingController titleController = new TextEditingController();
 TextEditingController dateController = new TextEditingController();
+
+Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
 List<Color> arr_color = [
   Colors.lightGreen.shade600,
@@ -93,6 +96,7 @@ Future<void> _calReadTotal() async {
 
 void main() {
   runApp(new MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: new SplashScreen(),
     localizationsDelegates: [
       GlobalMaterialLocalizations.delegate,
@@ -177,6 +181,8 @@ class _MyHomePageState extends State<MyHomePage> {
       total_bg = Colors.white;
       today_bg = Colors.lightGreen.shade100;
     }
+
+    checkAlarmStart();
 
     new Future.delayed(Duration.zero, () {
       goCal(context);
@@ -588,4 +594,20 @@ tz.TZDateTime _setNotiTime(int hh, int ii) {
       tz.TZDateTime(tz.local, now.year, now.month, now.day, hh, ii);
 
   return scheduledDate;
+}
+
+Future<void> checkAlarmStart() async {
+  bool AlarmStart = false;
+
+  final SharedPreferences prefs = await _prefs;
+  AlarmStart = prefs.getBool("AlarmStart") ?? false;
+
+  if (AlarmStart == false) {
+    await prefs.setBool("AlarmStart", true);
+    await prefs.setBool("notiState_0", true);
+    await prefs.setString("notiTime_0", "9:30");
+    print("알람 새로저장");
+  } else {
+    print("알람 이미 저장");
+  }
 }
