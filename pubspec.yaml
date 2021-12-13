@@ -43,6 +43,7 @@ dependencies:
   fluttertoast: ^8.0.8
   material_design_icons_flutter: ^5.0.6295
   flutter_local_notifications: ^9.1.4
+  flutter_switch: ^0.3.2
   get: ^4.5.1
   
   # The following adds the Cupertino Icons font to your application.

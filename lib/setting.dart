@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -64,6 +64,8 @@ class SettingApp extends StatefulWidget {
 
 class SettingAppState extends State<SettingApp> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  bool status = false;
 
   @override
   void initState() {
@@ -227,43 +229,51 @@ class SettingAppState extends State<SettingApp> {
   }
 
   Container WidgetBTN(context, int noti_no, int hh, int ii) {
-    // String hhN = f.format(hh);
-    // String iiN = f.format(ii);
-    // saved_timeTxt[noti_no] = "$hhN:$iiN";
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: SizedBox(
           height: 40, //height of button
-          width: double.infinity, //width of button equal to parent widget
           child: Row(children: [
-            ElevatedButton(
-              onPressed: () {
-                showTimePickerPop(context, noti_no);
-              },
-              style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 20),
-                  primary: btn_color[noti_no], //background color of button
-                  //side: BorderSide(width: 0, color: Colors.brown), //border width and color
-                  elevation: 2, //elevation of button
-                  padding: EdgeInsets.all(7) //content padding inside button
-                  ),
-              child: Text(saved_timeTxt[noti_no],
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold)),
-            ),
-            Switch(
-              value: saved_noti[noti_no],
-              onChanged: (value) {
-                setState(() {
-                  //saveNotiState(noti_no, value);
-                  _dailyAtTimeNotificationFromNotiNo(noti_no);
-                });
-              },
-              activeTrackColor: Colors.greenAccent,
-              activeColor: Colors.green,
-            )
+            SizedBox(
+                height: height * 0.09, //height to 9% of screen height,
+                width: width * 0.4, //width t 40% of screen width
+                child: ElevatedButton(
+                  onPressed: () {
+                    showTimePickerPop(context, noti_no);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 20),
+                      primary: btn_color[noti_no], //background color of button
+                      //side: BorderSide(width: 0, color: Colors.brown), //border width and color
+                      elevation: 2, //elevation of button
+                      padding: EdgeInsets.all(7) //content padding inside button
+                      ),
+                  child: Text(saved_timeTxt[noti_no],
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold)),
+                )),
+            SizedBox(
+                height: height * 0.09, //height to 9% of screen height,
+                width: width * 0.5, //width t 40% of screen width
+                child: FlutterSwitch(
+                  height: 40.0,
+                  width: 80.0,
+                  padding: 4.0,
+                  toggleSize: 30.0,
+                  borderRadius: 30.0,
+                  activeColor: Colors.green.shade600,
+                  value: saved_noti[noti_no],
+                  onToggle: (value) {
+                    setState(() {
+                      _dailyAtTimeNotificationFromNotiNo(noti_no);
+                    });
+                  },
+                ))
           ])),
     );
   }

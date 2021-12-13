@@ -120,14 +120,17 @@ class _ThanksCanledarState extends State<ThanksCanledar> {
             rangeStartDay: _rangeStart,
             rangeEndDay: _rangeEnd,
             calendarFormat: _calendarFormat,
+
             rangeSelectionMode: _rangeSelectionMode,
             eventLoader: _getEventsForDay,
             //events: _events,
-            startingDayOfWeek: StartingDayOfWeek.monday,
+            startingDayOfWeek: StartingDayOfWeek.sunday,
             locale: 'ko-KR',
             calendarStyle: CalendarStyle(
               // Use `CalendarStyle` to customize the UI
               outsideDaysVisible: false,
+              weekendTextStyle: TextStyle().copyWith(color: Colors.red),
+              holidayTextStyle: TextStyle().copyWith(color: Colors.red[800]),
             ),
             onDaySelected: _onDaySelected,
             onRangeSelected: _onRangeSelected,
